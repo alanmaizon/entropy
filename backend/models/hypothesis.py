@@ -4,7 +4,7 @@ Hypothesis data models.
 Represents proposed hypotheses and their evaluation results.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from uuid import UUID, uuid4
 
@@ -29,8 +29,8 @@ class Hypothesis(BaseModel):
     confidence: float = Field(default=0.5, ge=0.0, le=1.0)
     status: HypothesisStatus = HypothesisStatus.PENDING
     evidence_ids: list[UUID] = Field(default_factory=list)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class CritiqueResult(BaseModel):
@@ -40,7 +40,7 @@ class CritiqueResult(BaseModel):
     score: float = Field(ge=0.0, le=1.0)
     verdict: HypothesisStatus
     reasoning: str
-    evaluated_at: datetime = Field(default_factory=datetime.utcnow)
+    evaluated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class EpisodicEntry(BaseModel):
@@ -49,4 +49,4 @@ class EpisodicEntry(BaseModel):
     id: UUID = Field(default_factory=uuid4)
     hypothesis: Hypothesis
     critique: CritiqueResult
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

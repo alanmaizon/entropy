@@ -4,7 +4,7 @@ Knowledge data models.
 Defines the structured objects that flow through the Enthropy system.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -19,7 +19,7 @@ class Chunk(BaseModel):
     embedding: list[float] = Field(default_factory=list)
     metadata: dict[str, Any] = Field(default_factory=dict)
     source: str = ""
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class Entity(BaseModel):
@@ -38,7 +38,7 @@ class KnowledgeNode(BaseModel):
     label: str
     node_type: str
     properties: dict[str, Any] = Field(default_factory=dict)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class KnowledgeEdge(BaseModel):
