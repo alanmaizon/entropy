@@ -6,15 +6,14 @@ Vector and graph memory tests require running Qdrant/Neo4j and are
 marked as integration tests.
 """
 
-import pytest
 
+from backend.memory.episodic_memory import EpisodicMemory
 from backend.models.hypothesis import (
     CritiqueResult,
     EpisodicEntry,
     Hypothesis,
     HypothesisStatus,
 )
-from backend.memory.episodic_memory import EpisodicMemory
 
 
 class TestEpisodicMemory:
@@ -45,9 +44,11 @@ class TestEpisodicMemory:
     def test_get_by_status_filters_correctly(self):
         mem = EpisodicMemory()
         hyp, critique = self._make_pair()
+        hyp.status = HypothesisStatus.ACCEPTED
         mem.record(hyp, critique)
 
         hyp2 = Hypothesis(statement="The moon is made of cheese.")
+        hyp2.status = HypothesisStatus.REJECTED
         critique2 = CritiqueResult(
             hypothesis_id=hyp2.id,
             score=0.1,

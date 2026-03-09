@@ -4,7 +4,6 @@ Tests for the ingestion pipeline.
 Tests document loading, semantic chunking, and entity extraction parsing.
 """
 
-import pytest
 
 from backend.ingestion.chunker import SemanticChunker
 from backend.ingestion.document_loader import DocumentLoader
@@ -80,11 +79,9 @@ class TestEntityExtractorParsing:
 
         import asyncio
 
-        async def fake_chat(prompt, system=""):
-            return raw
-
         class FakeLLM:
-            chat = fake_chat
+            async def chat(self, prompt, system=""):
+                return raw
 
         extractor._llm = FakeLLM()
 
@@ -101,11 +98,9 @@ class TestEntityExtractorParsing:
         extractor = EntityExtractor.__new__(EntityExtractor)
         chunk = Chunk(text="Some text")
 
-        async def fake_chat(prompt, system=""):
-            return "not valid json"
-
         class FakeLLM:
-            chat = fake_chat
+            async def chat(self, prompt, system=""):
+                return "not valid json"
 
         extractor._llm = FakeLLM()
         entities = asyncio.run(extractor.extract(chunk))

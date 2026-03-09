@@ -71,7 +71,10 @@ class CriticEvaluator:
                     pass
             elif line.startswith("VERDICT:"):
                 raw = line.removeprefix("VERDICT:").strip().lower()
-                verdict = HypothesisStatus(raw) if raw in HypothesisStatus._value2member_map_ else HypothesisStatus.UNCERTAIN
+                try:
+                    verdict = HypothesisStatus(raw)
+                except ValueError:
+                    verdict = HypothesisStatus.UNCERTAIN
             elif line.startswith("REASONING:"):
                 reasoning = line.removeprefix("REASONING:").strip()
 

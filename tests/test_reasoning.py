@@ -5,18 +5,16 @@ Tests hypothesis generator parsing and critic evaluator parsing
 without requiring live LLM or memory connections.
 """
 
-import asyncio
 
 import pytest
 
-from backend.models.hypothesis import Hypothesis, HypothesisStatus
+from backend.models.hypothesis import HypothesisStatus
 from backend.reasoning.critic_evaluator import CriticEvaluator
 from backend.reasoning.hypothesis_generator import HypothesisGenerator
 
 
 class TestHypothesisGeneratorParsing:
     def test_parse_valid_response(self):
-        gen = HypothesisGenerator.__new__(HypothesisGenerator)
         response = (
             "HYPOTHESIS: Gravity is caused by mass.\n"
             "RATIONALE: Einstein's field equations."
@@ -26,7 +24,6 @@ class TestHypothesisGeneratorParsing:
         assert rationale == "Einstein's field equations."
 
     def test_parse_missing_rationale(self):
-        gen = HypothesisGenerator.__new__(HypothesisGenerator)
         response = "HYPOTHESIS: Stars are hot.\n"
         statement, rationale = HypothesisGenerator._parse_response(response)
         assert statement == "Stars are hot."
