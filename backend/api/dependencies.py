@@ -7,6 +7,7 @@ easily swapped out in tests.
 
 from functools import lru_cache
 
+from backend.ingestion.pipeline import IngestionPipeline
 from backend.memory.episodic_memory import EpisodicMemory
 from backend.memory.graph_memory import GraphMemory
 from backend.memory.vector_memory import VectorMemory
@@ -43,3 +44,11 @@ def get_critic_evaluator() -> CriticEvaluator:
 @lru_cache
 def get_knowledge_updater() -> KnowledgeUpdater:
     return KnowledgeUpdater()
+
+
+@lru_cache
+def get_ingestion_pipeline() -> IngestionPipeline:
+    return IngestionPipeline(
+        vector_memory=get_vector_memory(),
+        graph_memory=get_graph_memory(),
+    )

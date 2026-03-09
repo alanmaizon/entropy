@@ -10,20 +10,22 @@ data ingestion → structured memory → hypothesis generation → critic evalua
 
 ```
 enthropy/
-├── backend/          # FastAPI backend
-│   ├── api/          # REST endpoints
-│   ├── ingestion/    # Document → structured knowledge pipeline
-│   ├── memory/       # Hybrid memory (vector + graph + episodic)
-│   ├── reasoning/    # Hypothesis engine
-│   ├── agents/       # Explorer & Critic agents
-│   ├── models/       # Pydantic data models
-│   ├── services/     # LLM & embedding abstractions
-│   └── config/       # Pydantic settings
-├── frontend/         # React + Vite dashboard
-├── infrastructure/   # Docker & docker-compose
-├── docs/             # Architecture & module docs
-├── tests/            # pytest test suite
-└── scripts/          # Setup & utility scripts
+├── backend/
+│   ├── api/              # REST endpoints
+│   ├── ingestion/        # Document → chunks → entities → embeddings
+│   ├── memory/           # Hybrid memory (vector + graph + episodic/SQLite)
+│   ├── orchestration/    # ReasoningLoop — core cognitive cycle
+│   ├── reasoning/        # Hypothesis generator + critic evaluator
+│   ├── agents/           # Explorer, Critic, Researcher, Planner + MessageBus
+│   ├── world_model/      # Structured knowledge view + causal inference
+│   ├── models/           # Pydantic data models
+│   ├── services/         # LLM & embedding abstractions
+│   └── config/           # Pydantic settings
+├── frontend/             # React + Vite dashboard
+├── infrastructure/       # Docker & docker-compose
+├── docs/                 # Architecture & module docs
+├── tests/                # pytest test suite (30 tests)
+└── scripts/              # Reasoning cycle runner & seed data
 ```
 
 See [docs/architecture.md](docs/architecture.md) for the full system design.
@@ -64,12 +66,14 @@ API docs at http://localhost:8000/docs
 
 ## API Endpoints
 
-| Method | Path          | Description                        |
-|--------|---------------|------------------------------------|
-| POST   | /ingest       | Ingest a document into memory      |
-| POST   | /hypothesis   | Generate a hypothesis from memory  |
-| GET    | /knowledge    | Retrieve stored knowledge          |
-| GET    | /graph        | Retrieve the knowledge graph       |
+| Method | Path          | Description                            |
+|--------|---------------|----------------------------------------|
+| POST   | /ingest       | Ingest a document (full pipeline)      |
+| POST   | /hypothesis   | Generate and evaluate a hypothesis     |
+| POST   | /reason       | Run multi-cycle reasoning on a topic   |
+| GET    | /knowledge    | Retrieve episodic memory log           |
+| GET    | /graph        | Retrieve knowledge graph nodes         |
+| GET    | /health       | Service health check                   |
 
 ## Development
 
@@ -79,8 +83,18 @@ make lint     # Lint code
 make format   # Auto-format code
 ```
 
+## Standalone Reasoning
+
+Run the full reasoning cycle without the API:
+
+```bash
+python scripts/run_reasoning_cycle.py --topic "quantum gravity" --cycles 2
+```
+
 ## Documentation
 
 - [Architecture](docs/architecture.md)
+- [Reasoning Loop](docs/reasoning-loop.md)
+- [World Model](docs/world-model.md)
 - [Agents](docs/agents.md)
 - [Memory System](docs/memory.md)

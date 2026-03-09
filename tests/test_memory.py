@@ -1,7 +1,7 @@
 """
 Tests for the memory subsystems.
 
-Tests episodic memory directly (no external dependencies required).
+Tests episodic memory using in-memory SQLite (no external dependencies).
 Vector and graph memory tests require running Qdrant/Neo4j and are
 marked as integration tests.
 """
@@ -17,6 +17,10 @@ from backend.models.hypothesis import (
 
 
 class TestEpisodicMemory:
+    def _make_memory(self) -> EpisodicMemory:
+        """Create a fresh in-memory episodic memory for each test."""
+        return EpisodicMemory(db_path=":memory:")
+
     def _make_pair(self) -> tuple[Hypothesis, CritiqueResult]:
         hyp = Hypothesis(statement="The sky is blue.", rationale="Observation.")
         critique = CritiqueResult(
@@ -28,21 +32,21 @@ class TestEpisodicMemory:
         return hyp, critique
 
     def test_record_and_retrieve(self):
-        mem = EpisodicMemory()
+        mem = self._make_memory()
         hyp, critique = self._make_pair()
         entry = mem.record(hyp, critique)
         assert isinstance(entry, EpisodicEntry)
         assert len(mem.get_all()) == 1
 
     def test_get_all_returns_chronological(self):
-        mem = EpisodicMemory()
+        mem = self._make_memory()
         for _ in range(3):
             hyp, critique = self._make_pair()
             mem.record(hyp, critique)
         assert len(mem.get_all()) == 3
 
     def test_get_by_status_filters_correctly(self):
-        mem = EpisodicMemory()
+        mem = self._make_memory()
         hyp, critique = self._make_pair()
         hyp.status = HypothesisStatus.ACCEPTED
         mem.record(hyp, critique)
@@ -63,6 +67,14 @@ class TestEpisodicMemory:
         assert len(rejected) == 1
 
     def test_empty_memory(self):
-        mem = EpisodicMemory()
+        mem = self._make_memory()
         assert mem.get_all() == []
         assert mem.get_by_status("accepted") == []
+
+    def test_clear(self):
+        mem = self._make_memory()
+        hyp, critique = self._make_pair()
+        mem.record(hyp, critique)
+        assert len(mem.get_all()) == 1
+        mem.clear()
+        assert len(mem.get_all()) == 0

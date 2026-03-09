@@ -1,10 +1,11 @@
 """
 API Routes.
 
-Exposes the four core Enthropy endpoints:
+Exposes the core Enthropy endpoints:
 
   POST /ingest      – ingest a document into memory
   POST /hypothesis  – generate and evaluate a hypothesis
+  POST /reason      – run a full reasoning cycle on a topic
   GET  /knowledge   – retrieve episodic knowledge log
   GET  /graph       – retrieve knowledge graph nodes
 """
@@ -13,22 +14,13 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
 from backend.api.dependencies import (
-    get_critic_evaluator,
     get_episodic_memory,
     get_graph_memory,
-    get_hypothesis_generator,
-    get_knowledge_updater,
-    get_vector_memory,
+    get_ingestion_pipeline,
 )
-from backend.ingestion.chunker import SemanticChunker
-from backend.ingestion.document_loader import DocumentLoader
-from backend.ingestion.embedder import Embedder
+from backend.ingestion.pipeline import IngestionPipeline
 from backend.memory.episodic_memory import EpisodicMemory
 from backend.memory.graph_memory import GraphMemory
-from backend.memory.vector_memory import VectorMemory
-from backend.reasoning.critic_evaluator import CriticEvaluator
-from backend.reasoning.hypothesis_generator import HypothesisGenerator
-from backend.reasoning.knowledge_updater import KnowledgeUpdater
 
 router = APIRouter()
 
@@ -45,6 +37,7 @@ class IngestRequest(BaseModel):
 
 class IngestResponse(BaseModel):
     chunks_stored: int
+    entities_extracted: int
 
 
 class HypothesisRequest(BaseModel):
@@ -56,6 +49,15 @@ class HypothesisResponse(BaseModel):
     critique: dict
 
 
+class ReasonRequest(BaseModel):
+    topic: str
+    cycles: int = 1
+
+
+class ReasonResponse(BaseModel):
+    results: list[dict]
+
+
 # ---------------------------------------------------------------------------
 # Endpoints
 # ---------------------------------------------------------------------------
@@ -64,67 +66,60 @@ class HypothesisResponse(BaseModel):
 @router.post("/ingest", response_model=IngestResponse)
 async def ingest(
     request: IngestRequest,
-    vector_memory: VectorMemory = Depends(get_vector_memory),
+    pipeline: IngestionPipeline = Depends(get_ingestion_pipeline),
 ) -> IngestResponse:
-    """Ingest a document: chunk it, embed it, and store it in vector memory.
+    """Ingest a document through the full pipeline.
 
-    Args:
-        request: Contains the raw ``text`` and an optional ``source`` label.
-
-    Returns:
-        The number of chunks stored.
+    Chunks the text, extracts entities, embeds, and stores in both
+    vector memory and graph memory.
     """
-    loader = DocumentLoader()
-    chunker = SemanticChunker()
-    embedder = Embedder()
-
-    text = loader.load_text(request.text)
-    if not text:
+    if not request.text.strip():
         raise HTTPException(status_code=400, detail="Empty document provided.")
 
-    chunks = chunker.chunk(text, source=request.source)
-    chunks = await embedder.embed_chunks(chunks)
-
-    await vector_memory.ensure_collection()
-    for chunk in chunks:
-        await vector_memory.store(chunk)
-
-    return IngestResponse(chunks_stored=len(chunks))
+    result = await pipeline.run(request.text, source=request.source)
+    return IngestResponse(
+        chunks_stored=result.chunks_stored,
+        entities_extracted=result.entities_extracted,
+    )
 
 
 @router.post("/hypothesis", response_model=HypothesisResponse)
-async def hypothesis(
-    request: HypothesisRequest,
-    generator: HypothesisGenerator = Depends(get_hypothesis_generator),
-    evaluator: CriticEvaluator = Depends(get_critic_evaluator),
-    updater: KnowledgeUpdater = Depends(get_knowledge_updater),
-) -> HypothesisResponse:
+async def hypothesis(request: HypothesisRequest) -> HypothesisResponse:
     """Generate a hypothesis for the given topic and evaluate it.
 
-    Args:
-        request: Contains the ``topic`` to explore.
-
-    Returns:
-        The generated hypothesis and its critique result.
+    Delegates to the orchestration layer's ReasoningLoop.
     """
-    hyp = await generator.generate(request.topic)
-    critique = await evaluator.evaluate(hyp)
-    await updater.update(hyp, critique)
+    from backend.orchestration.reasoning_loop import ReasoningLoop
+
+    loop = ReasoningLoop()
+    cycle_result = await loop.run_cycle(request.topic)
     return HypothesisResponse(
-        hypothesis=hyp.model_dump(mode="json"),
-        critique=critique.model_dump(mode="json"),
+        hypothesis=cycle_result["hypothesis"],
+        critique=cycle_result["critique"],
     )
+
+
+@router.post("/reason", response_model=ReasonResponse)
+async def reason(request: ReasonRequest) -> ReasonResponse:
+    """Run one or more full reasoning cycles on a topic.
+
+    Each cycle generates a hypothesis, critiques it, and updates knowledge.
+    """
+    from backend.orchestration.reasoning_loop import ReasoningLoop
+
+    loop = ReasoningLoop()
+    results = []
+    for _ in range(request.cycles):
+        cycle_result = await loop.run_cycle(request.topic)
+        results.append(cycle_result)
+    return ReasonResponse(results=results)
 
 
 @router.get("/knowledge")
 async def knowledge(
     episodic: EpisodicMemory = Depends(get_episodic_memory),
 ) -> dict:
-    """Return all recorded hypothesis evaluation episodes.
-
-    Returns:
-        A dict with a ``episodes`` list.
-    """
+    """Return all recorded hypothesis evaluation episodes."""
     entries = episodic.get_all()
     return {"episodes": [e.model_dump(mode="json") for e in entries]}
 
@@ -133,10 +128,6 @@ async def knowledge(
 async def graph(
     graph_memory: GraphMemory = Depends(get_graph_memory),
 ) -> dict:
-    """Return all nodes currently stored in the knowledge graph.
-
-    Returns:
-        A dict with a ``nodes`` list.
-    """
+    """Return all nodes currently stored in the knowledge graph."""
     nodes = await graph_memory.get_all_nodes()
     return {"nodes": nodes}

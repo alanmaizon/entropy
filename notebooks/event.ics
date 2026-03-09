@@ -1,0 +1,12 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+X-WR-TIMEZONE:Europe/Dublin
+URL:https://www.anthropic.com/events/anthropic-at-google-cloud-next-2026
+DTSTART:20260422T224800
+DTEND:20260425T020000
+SUMMARY:Anthropic at Google Cloud Next 2026
+DESCRIPTION:Find us at Google Cloud Next to learn more about enterprise-ready AI for complex, long-running agents—on your infrastructure, with built-in safety.
+LOCATION:Las Vegas, NV | Booth 2021
+END:VEVENT
+END:VCALENDAR
