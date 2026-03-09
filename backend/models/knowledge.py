@@ -1,7 +1,7 @@
 """
 Knowledge data models.
 
-Defines the structured objects that flow through the Enthropy system.
+Defines the structured objects that flow through the Entropy system.
 """
 
 from datetime import datetime, timezone

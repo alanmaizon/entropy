@@ -1,1 +1,1 @@
-"""Enthropy backend package."""
+"""Entropy backend package."""

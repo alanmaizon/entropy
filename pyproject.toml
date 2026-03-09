@@ -3,7 +3,7 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "enthropy"
+name = "entropy"
 version = "0.1.0"
 description = "A continual-learning knowledge engine"
 requires-python = ">=3.11"

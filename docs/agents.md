@@ -1,8 +1,8 @@
-# Enthropy – Agents
+# Entropy – Agents
 
 ## Overview
 
-Enthropy uses a **generator–critic** multi-agent pattern.
+Entropy uses a **generator–critic** multi-agent pattern.
 Agents are stateless async workers that communicate via structured
 `AgentMessage` objects.
 

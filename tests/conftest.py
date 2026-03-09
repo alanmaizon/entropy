@@ -1,5 +1,5 @@
 """
-Shared pytest fixtures for the Enthropy test suite.
+Shared pytest fixtures for the Entropy test suite.
 """
 
 import pytest

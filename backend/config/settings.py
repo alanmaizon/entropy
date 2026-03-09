@@ -26,7 +26,7 @@ class Settings(BaseSettings):
 
     # Qdrant vector database
     qdrant_url: str = "http://localhost:6333"
-    qdrant_collection: str = "enthropy"
+    qdrant_collection: str = "entropy"
 
     # Neo4j graph database
     neo4j_uri: str = "bolt://localhost:7687"

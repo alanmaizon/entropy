@@ -1,6 +1,6 @@
 # Reasoning Loop
 
-The reasoning loop is the core cognitive cycle of Enthropy. It drives the system's ability to generate, evaluate, and refine knowledge over time.
+The reasoning loop is the core cognitive cycle of Entropy. It drives the system's ability to generate, evaluate, and refine knowledge over time.
 
 ## Overview
 

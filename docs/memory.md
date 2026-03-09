@@ -1,8 +1,8 @@
-# Enthropy – Memory System
+# Entropy – Memory System
 
 ## Overview
 
-Enthropy uses a **hybrid memory architecture** combining three complementary
+Entropy uses a **hybrid memory architecture** combining three complementary
 storage systems.
 
 ## Vector Memory (Qdrant)

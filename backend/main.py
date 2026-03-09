@@ -1,5 +1,5 @@
 """
-Enthropy FastAPI application entry point.
+Entropy FastAPI application entry point.
 
 This module creates the FastAPI app, registers routes, and sets up
 startup/shutdown lifecycle events.
@@ -14,7 +14,7 @@ from backend.config.settings import get_settings
 settings = get_settings()
 
 app = FastAPI(
-    title="Enthropy",
+    title="Entropy",
     description="A continual-learning knowledge engine",
     version="0.1.0",
 )
@@ -33,4 +33,4 @@ app.include_router(router)
 @app.get("/health")
 async def health_check() -> dict:
     """Return service health status."""
-    return {"status": "ok", "service": "enthropy"}
+    return {"status": "ok", "service": "entropy"}

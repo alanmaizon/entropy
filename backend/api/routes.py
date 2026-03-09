@@ -1,7 +1,7 @@
 """
 API Routes.
 
-Exposes the core Enthropy endpoints:
+Exposes the core Entropy endpoints:
 
   POST /ingest      – ingest a document into memory
   POST /hypothesis  – generate and evaluate a hypothesis

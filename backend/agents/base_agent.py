@@ -1,7 +1,7 @@
 """
 Base Agent.
 
-Abstract base class for all agents in the Enthropy system.
+Abstract base class for all agents in the Entropy system.
 Agents share a common message-passing interface.
 """
 

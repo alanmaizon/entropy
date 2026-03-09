@@ -1,4 +1,4 @@
-"""Run a complete Enthropy reasoning cycle from the command line.
+"""Run a complete Entropy reasoning cycle from the command line.
 
 Demonstrates the full cognitive loop without the API:
     1. Ingest sample documents
@@ -21,7 +21,7 @@ import logging
 import sys
 
 logging.basicConfig(level=logging.INFO, format="%(name)s | %(message)s")
-logger = logging.getLogger("enthropy.runner")
+logger = logging.getLogger("entropy.runner")
 
 SAMPLE_DOCUMENTS = [
     {
@@ -105,7 +105,7 @@ async def main(topic: str, cycles: int, revisit: bool) -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run Enthropy reasoning cycle")
+    parser = argparse.ArgumentParser(description="Run Entropy reasoning cycle")
     parser.add_argument(
         "--topic",
         default="the relationship between gravity and quantum mechanics",

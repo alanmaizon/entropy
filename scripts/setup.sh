@@ -2,7 +2,7 @@
 # Setup script: install Python deps and copy .env
 set -euo pipefail
 
-echo "🔧 Setting up Enthropy..."
+echo "🔧 Setting up Entropy..."
 
 if [ ! -f .env ]; then
   cp .env.example .env

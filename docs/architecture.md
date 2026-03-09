@@ -1,4 +1,4 @@
-# Enthropy – Architecture
+# Entropy – Architecture
 
 ## System Loop
 

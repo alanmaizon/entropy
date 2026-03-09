@@ -1,6 +1,6 @@
 # World Model
 
-The world model is Enthropy's internal representation of structured knowledge. It provides a higher-level reasoning interface over the raw memory stores.
+The world model is Entropy's internal representation of structured knowledge. It provides a higher-level reasoning interface over the raw memory stores.
 
 ## Purpose
 

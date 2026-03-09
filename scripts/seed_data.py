@@ -1,5 +1,5 @@
 """
-Seed script: ingest sample documents into Enthropy via the REST API.
+Seed script: ingest sample documents into Entropy via the REST API.
 
 Usage:
     python scripts/seed_data.py

@@ -12,7 +12,7 @@ export default function App() {
 
   return (
     <div style={{ fontFamily: 'sans-serif', maxWidth: 900, margin: '0 auto', padding: 24 }}>
-      <h1>Enthropy</h1>
+      <h1>Entropy</h1>
       <p>Continual-learning knowledge engine</p>
 
       <section>

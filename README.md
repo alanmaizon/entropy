@@ -1,6 +1,6 @@
-# Enthropy
+# Entropy
 
-**Enthropy** is a continual-learning knowledge engine that ingests information, builds structured knowledge, generates hypotheses, critiques them, and updates a world model over time.
+**Entropy** is a continual-learning knowledge engine that ingests information, builds structured knowledge, generates hypotheses, critiques them, and updates a world model over time.
 
 ```
 data ingestion → structured memory → hypothesis generation → critic evaluation → knowledge update → repeat
@@ -9,7 +9,7 @@ data ingestion → structured memory → hypothesis generation → critic evalua
 ## Architecture Overview
 
 ```
-enthropy/
+entropy/
 ├── backend/
 │   ├── api/              # REST endpoints
 │   ├── ingestion/        # Document → chunks → entities → embeddings
