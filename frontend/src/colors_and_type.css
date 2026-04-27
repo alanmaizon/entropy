@@ -1,0 +1,121 @@
+/* ============================================================
+   ENTROPY — Foundations
+   Color & Type tokens for the Entropy continual-learning engine.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@font-face {
+  font-family: 'Perfect Futures';
+  src: url('./fonts/PerfectFutures-4BrZ4.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Perfect Futures';
+  src: url('./fonts/PerfectFuturesItalic-gxWpE.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --bg-0: #0b0c0f;
+  --bg-1: #111317;
+  --bg-2: #161a1f;
+  --bg-3: #1d2127;
+  --bg-4: #262b33;
+
+  --fg-0: #f6f3ee;
+  --fg-1: #d6d2ca;
+  --fg-2: #989289;
+  --fg-3: #5e5a53;
+  --fg-4: #3a3833;
+
+  --line-1: rgba(246,243,238,0.06);
+  --line-2: rgba(246,243,238,0.12);
+  --line-3: rgba(246,243,238,0.22);
+
+  --phosphor:        #c6f24a;
+  --phosphor-soft:   #9ec337;
+  --phosphor-deep:   #6c8a1f;
+  --phosphor-glow:   rgba(198, 242, 74, 0.18);
+
+  --ember:           #e8a04a;
+  --ember-soft:      #c8843a;
+  --ember-glow:      rgba(232, 160, 74, 0.16);
+
+  --plasma:          #9f7aff;
+  --plasma-soft:     #7d5ee0;
+  --plasma-glow:     rgba(159, 122, 255, 0.18);
+
+  --accepted:        #6fdc8c;
+  --accepted-bg:     rgba(111, 220, 140, 0.10);
+  --rejected:        #ff6b6b;
+  --rejected-bg:     rgba(255, 107, 107, 0.10);
+  --uncertain:       #e8a04a;
+  --uncertain-bg:    rgba(232, 160, 74, 0.10);
+  --pending:         #6ea8ff;
+  --pending-bg:      rgba(110, 168, 255, 0.10);
+
+  --node-entity:     #9f7aff;
+  --node-claim:      #c6f24a;
+  --node-evidence:   #6ea8ff;
+  --node-causal:     #e8a04a;
+
+  --font-display: 'Perfect Futures', 'Iowan Old Style', 'Times New Roman', serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono:    'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+
+  --fs-xs:   11px;
+  --fs-sm:   13px;
+  --fs-base: 15px;
+  --fs-md:   17px;
+  --fs-lg:   20px;
+  --fs-xl:   26px;
+  --fs-2xl:  34px;
+  --fs-3xl:  46px;
+  --fs-4xl:  64px;
+  --fs-display: 88px;
+
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3:  12px;
+  --s-4:  16px;
+  --s-5:  24px;
+  --s-6:  32px;
+  --s-7:  48px;
+  --s-8:  64px;
+  --s-9:  96px;
+  --s-10: 128px;
+
+  --r-1: 2px;
+  --r-2: 4px;
+  --r-3: 6px;
+  --r-4: 10px;
+  --r-5: 16px;
+  --r-pill: 999px;
+
+  --shadow-1: 0 1px 0 rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-2: 0 4px 12px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.03) inset;
+  --shadow-3: 0 12px 32px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.04) inset;
+  --shadow-glow: 0 0 0 1px var(--phosphor), 0 0 24px var(--phosphor-glow);
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasis: cubic-bezier(0.32, 0.72, 0, 1);
+  --dur-fast:   120ms;
+  --dur-base:   200ms;
+  --dur-slow:   360ms;
+}
+
+html, body {
+  background: var(--bg-0);
+  color: var(--fg-1);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'cv11', 'ss01', 'ss03';
+}
