@@ -14,10 +14,20 @@ function nodeGlyph(label) {
 }
 
 export default function KnowledgeGraph({ extraNodes }) {
-  const [apiNodes, setApiNodes] = useState([]);
+  const DEMO_NODES = [
+    { id: 'n0', kind: 'entity',   glyph: 'M', label: 'mass' },
+    { id: 'n1', kind: 'entity',   glyph: 'G', label: 'general relativity' },
+    { id: 'n2', kind: 'claim',    glyph: '⊢', label: 'spacetime curvature' },
+    { id: 'n3', kind: 'evidence', glyph: 'e', label: 'Eddington 1919' },
+  ];
+
+  const [apiNodes, setApiNodes] = useState(
+    import.meta.env.VITE_DEMO === 'true' ? DEMO_NODES : []
+  );
   const [loading, setLoading] = useState(false);
 
   const fetchGraph = async () => {
+    if (import.meta.env.VITE_DEMO === 'true') return;
     setLoading(true);
     try {
       const res = await fetch('/graph');

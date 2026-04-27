@@ -12,6 +12,16 @@ export default function IngestionPanel({ onIngest }) {
     if (!text.trim()) return;
     setLoading(true);
     setStatus(null);
+
+    if (import.meta.env.VITE_DEMO === 'true') {
+      await new Promise(r => setTimeout(r, 700));
+      const chunks = Math.max(1, Math.round(text.length / 180));
+      onIngest({ source: source || 'untitled', chunks });
+      setStatus({ type: 'ok', msg: `✓  Stored ${chunks} chunk${chunks > 1 ? 's' : ''} · indexed in 0.83s` });
+      setText(''); setSource(''); setLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch('/ingest', {
         method: 'POST',

@@ -2,6 +2,13 @@ import { useState } from 'react';
 import { Icon, Button } from './primitives.jsx';
 import HypothesisCard from './HypothesisCard.jsx';
 
+const DEMO_FIXTURES = [
+  { statement: 'Dark matter halos exhibit cored profiles in low-mass dwarf galaxies, deviating from NFW predictions.', verdict: 'ACCEPTED', score: 0.78, reasoning: 'Three independent simulations support a cored profile; one paper contradicts but used different mass cuts.' },
+  { statement: 'Quantum gravity effects become measurable at neutron-star merger ringdown frequencies.', verdict: 'UNCERTAIN', score: 0.42, reasoning: 'Theoretical motivation is strong, but no current observational constraint reaches the required sensitivity.' },
+  { statement: 'Gravitational entropy follows the holographic area law in all asymptotically-flat spacetimes.', verdict: 'ACCEPTED', score: 0.84, reasoning: 'Bekenstein-Hawking + recent results on quantum extremal surfaces converge.' },
+  { statement: 'Continual-learning agents are immune to catastrophic forgetting given a sufficient replay buffer.', verdict: 'REJECTED', score: 0.21, reasoning: 'Counter-evidence from three replay-augmented experiments shows persistent task interference.' },
+];
+
 const STEPS = [
   { name: 'Observe',  desc: 'Embed topic vector',             dur: '0.12s' },
   { name: 'Memory',   desc: 'Vector search · top_k=5',        dur: '0.34s' },
@@ -17,23 +24,45 @@ export default function HypothesisPanel({ onResult, onLoopState }) {
   const [step, setStep] = useState(-1);
   const [error, setError] = useState(null);
 
+  const runStepAnimation = () => {
+    let i = 0;
+    setStep(0);
+    return new Promise(resolve => {
+      const advance = () => {
+        i++;
+        if (i < STEPS.length) { setStep(i); setTimeout(advance, 600 + Math.random() * 400); }
+        else resolve();
+      };
+      setTimeout(advance, 600);
+    });
+  };
+
   const generate = async (e) => {
     e.preventDefault();
     if (!topic.trim()) return;
     setLoading(true);
-    setStep(0);
     setError(null);
     onLoopState(true);
 
-    // Animate through loop steps while the real request is in-flight
+    if (import.meta.env.VITE_DEMO === 'true') {
+      await runStepAnimation();
+      const fix = DEMO_FIXTURES[Math.floor(Math.random() * DEMO_FIXTURES.length)];
+      const id = 'h_' + Math.random().toString(36).slice(2, 6);
+      const cycle = String(entries.length + 1).padStart(2, '0');
+      const result = { id, cycle, topic, evidence: 3 + Math.floor(Math.random() * 4), ...fix };
+      setEntries(prev => [result, ...prev]);
+      onResult(result);
+      setTopic('');
+      setLoading(false); setStep(-1); onLoopState(false);
+      return;
+    }
+
+    // Animate steps while real request is in-flight
     let stepIdx = 0;
     const stepTimer = setInterval(() => {
       stepIdx++;
-      if (stepIdx < STEPS.length) {
-        setStep(stepIdx);
-      } else {
-        clearInterval(stepTimer);
-      }
+      if (stepIdx < STEPS.length) setStep(stepIdx);
+      else clearInterval(stepTimer);
     }, 700 + Math.random() * 400);
 
     try {
